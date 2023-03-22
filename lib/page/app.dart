@@ -137,7 +137,7 @@ class _AppState extends State<App> {
               const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 '옆으로 슬라이드하면 데이터 삭제',
                 style: TextStyle(color: Colors.black45),
               )
@@ -177,11 +177,11 @@ class _AppState extends State<App> {
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
           )),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(),
-              Icon(Icons.delete),
+              const SizedBox(),
+              const Icon(Icons.delete),
             ],
           ),
         ),
