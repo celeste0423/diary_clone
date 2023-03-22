@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "459170830921",
+    "project_id": "crudpracticeflutter",
+    "storage_bucket": "crudpracticeflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459170830921:android:f4f98e4de447a6400dfd98",
+        "android_client_info": {
+          "package_name": "com.example.diary_pencake_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459170830921-roti8d0aab2v7n38fgtv60u36neletme.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuVpJ3u9fik57zlIBM6FpAM-E5mU0KRq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459170830921-roti8d0aab2v7n38fgtv60u36neletme.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
