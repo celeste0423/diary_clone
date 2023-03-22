@@ -14,12 +14,16 @@ class NoteEditPage extends StatelessWidget {
           },
           child: const Padding(
             padding: EdgeInsets.all(10.0),
-            child: Text(
-              '취소',
-              style: TextStyle(
-                  color: Colors.black26,
-                  fontWeight: FontWeight.w200,
-                  fontSize: 15),
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: Text(
+                '취소',
+                style: TextStyle(
+                    color: Colors.black26,
+                    fontWeight: FontWeight.w200,
+                    fontSize: 15),
+              ),
             ),
           ),
         ),
@@ -30,12 +34,16 @@ class NoteEditPage extends StatelessWidget {
             },
             child: const Padding(
               padding: EdgeInsets.all(10.0),
-              child: Text(
-                '완료',
-                style: TextStyle(
-                    color: Colors.lightBlue,
-                    fontWeight: FontWeight.w200,
-                    fontSize: 15),
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: Text(
+                  '완료',
+                  style: TextStyle(
+                      color: Colors.lightBlue,
+                      fontWeight: FontWeight.w200,
+                      fontSize: 15),
+                ),
               ),
             ),
           ),
