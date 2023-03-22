@@ -1,14 +1,31 @@
-name: Gh-Pages
-
+name: Flutter Web
 on:
   push:
-    branches: [ master ]
-
+    branches:
+      - master
 jobs:
   build:
+    name: Build Web
+    env:
+      my_secret: $
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2 # Only works with v2
+      - uses: actions/checkout@v1
       - uses: subosito/flutter-action@v1
-      - uses: erickzanardo/flutter-gh-pages@v7
+        with:
+          channel: 'dev'
+      - run: flutter config --enable-web
+      - run: flutter pub get
+      - run: flutter build web --release
+        working-directory: ./lib/main.dart
+      - run: |
+          cd lib/main.dart/build/web
+          git init
+          git config --global user.email jyeob25@naver.com
+          git config --global user.name celeste0423
+          git status
+          git remote add origin https://github.com/celeste0423/diary_clone.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "update"
+          git push origin gh-pages -f
