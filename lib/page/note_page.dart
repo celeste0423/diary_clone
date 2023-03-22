@@ -68,7 +68,9 @@ class NotePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: GestureDetector(
             onTap: () {
               Get.back();
@@ -84,7 +86,8 @@ class NotePage extends StatelessWidget {
           Positioned.fill(
             child: GestureDetector(
               onTap: () {
-                Get.to(() => NoteEditPage());
+                Get.to(() => NoteEditPage(),
+                    arguments: index, transition: Transition.fadeIn);
               },
               child: Container(
                 color: Colors.black.withOpacity(0),

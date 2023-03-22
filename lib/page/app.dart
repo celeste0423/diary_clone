@@ -101,7 +101,7 @@ class _AppState extends State<App> {
 
   Widget _bodyWidget() {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
           Column(
@@ -112,7 +112,7 @@ class _AppState extends State<App> {
                   label: Text('노트제목을 입력하세요'),
                 ),
               ),
-              TextField(
+              TextFormField(
                 controller: contentController,
                 decoration: const InputDecoration(
                   label: Text('노트내용을 입력하세요'),
@@ -134,6 +134,13 @@ class _AppState extends State<App> {
                     },
                     child: const Text('저장 버튼')),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                '옆으로 슬라이드하면 데이터 삭제',
+                style: TextStyle(color: Colors.black45),
+              )
             ],
           ),
           Expanded(
@@ -161,29 +168,51 @@ class _AppState extends State<App> {
     );
   }
 
-  Widget buildNote(Note note, int index) => GestureDetector(
-        onTap: () {
-          Get.to(() => NotePage(), arguments: index);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget buildNote(Note note, int index) => Dismissible(
+        key: UniqueKey(),
+        background: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            colors: [Colors.red.withOpacity(0.8), Colors.white],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          )),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                note.noteTitle!,
-                style: const TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              Text(
-                timeago.format(note.createdAt!),
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Colors.black38,
-                ),
-              ),
+              SizedBox(),
+              Icon(Icons.delete),
             ],
+          ),
+        ),
+        onDismissed: (direction) {
+          Note.delete(note.id!);
+        },
+        child: GestureDetector(
+          onTap: () {
+            Get.to(() => NotePage(),
+                arguments: index, transition: Transition.leftToRightWithFade);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  note.noteTitle!,
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  timeago.format(note.createdAt!),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: Colors.black38,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
