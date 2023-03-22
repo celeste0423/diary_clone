@@ -20,7 +20,7 @@ jobs:
       - run: flutter build web --release
         working-directory: lib/main.dart
       - run: |
-          cd lib/main.dart/build/web
+          cd build/web
           git init
           git config --global user.email jyeob25@naver.com
           git config --global user.name celeste0423
