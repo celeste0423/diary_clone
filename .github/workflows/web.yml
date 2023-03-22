@@ -25,7 +25,7 @@ jobs:
           git config --global user.email jyeob25@gmail.com
           git config --global user.name celeste0423
           git status
-          git remote add origin https://${{secrets.commit_secret}}@github.com/celeste0423/diary_clone.git
+          git remote add origin git@github.com:celeste0423/diary_clone.git
           git checkout -b gh-pages
           git add --all
           git commit -m "update"
