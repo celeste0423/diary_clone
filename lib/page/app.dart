@@ -180,8 +180,13 @@ class _AppState extends State<App> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const SizedBox(),
-              const Icon(Icons.delete),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
             ],
           ),
         ),
@@ -191,7 +196,7 @@ class _AppState extends State<App> {
         child: GestureDetector(
           onTap: () {
             Get.to(() => NotePage(),
-                arguments: index, transition: Transition.leftToRightWithFade);
+                arguments: note, transition: Transition.leftToRightWithFade);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

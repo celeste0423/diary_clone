@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../repository/notes_repository.dart';
+
 class NotePage extends StatelessWidget {
   NotePage({Key? key}) : super(key: key);
 
-  int? index = Get.arguments;
+  Note note = Get.arguments;
 
   Widget _noteWidget() {
     return StreamBuilder<QuerySnapshot>(
@@ -19,8 +21,6 @@ class NotePage extends StatelessWidget {
         if (!snapshot.hasData) {
           return const CircularProgressIndicator();
         }
-        final documents = snapshot.data!.docs;
-        final note = documents[index!];
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
           child: Column(
@@ -30,7 +30,7 @@ class NotePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
-                  note['note_title'],
+                  note.noteTitle!,
                   style: const TextStyle(
                       fontWeight: FontWeight.w500, fontSize: 20),
                 ),
@@ -39,7 +39,7 @@ class NotePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
                   DateFormat('yyyy년 m월 dd일 (E) ah:mm')
-                      .format(note['created_at'].toDate()),
+                      .format(note.createdAt as DateTime),
                   style: const TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 12,
@@ -50,7 +50,7 @@ class NotePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: SingleChildScrollView(
                   child: Text(
-                    note['content'].toString(),
+                    note.content.toString(),
                     style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 15,
@@ -87,7 +87,7 @@ class NotePage extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Get.to(() => NoteEditPage(),
-                    arguments: index, transition: Transition.fadeIn);
+                    arguments: note, transition: Transition.fadeIn);
               },
               child: Container(
                 color: Colors.black.withOpacity(0),
