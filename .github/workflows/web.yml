@@ -16,6 +16,7 @@ jobs:
           channel: 'dev'
       - run: flutter config --enable-web
       - run: flutter pub get
+      - run: flutter upgrade
       - run: flutter build web --release
         working-directory: ./
       - run: |
