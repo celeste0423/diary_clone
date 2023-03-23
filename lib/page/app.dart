@@ -8,6 +8,8 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../repository/notes_repository.dart';
 
 class App extends StatefulWidget {
+  const App({super.key});
+
   @override
   State<App> createState() => _AppState();
 }
@@ -37,7 +39,6 @@ class _AppState extends State<App> {
     });
   }
 
-  @override
   PreferredSizeWidget _appBarWidget() {
     return PreferredSize(
       preferredSize: Size(Get.width, Get.height * 0.3),
@@ -175,7 +176,7 @@ class _AppState extends State<App> {
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
           )),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
@@ -200,7 +201,7 @@ class _AppState extends State<App> {
         },
         child: GestureDetector(
           onTap: () {
-            Get.to(() => NotePage(),
+            Get.to(() => const NotePage(),
                 arguments: note, transition: Transition.leftToRightWithFade);
           },
           child: Padding(
