@@ -37,7 +37,6 @@ class _NoteEditPageState extends State<NoteEditPage> {
   @override
   PreferredSizeWidget _appBarWidget() {
     return AppBar(
-      forceMaterialTransparency: true,
       elevation: 0,
       backgroundColor: Colors.white,
       leadingWidth: 100,
