@@ -44,7 +44,6 @@ class _AppState extends State<App> {
       preferredSize: Size(Get.width, Get.height * 0.3),
       child: SafeArea(
         child: AppBar(
-          forceMaterialTransparency: true,
           elevation: 0,
           backgroundColor: Colors.white,
           flexibleSpace: Center(
