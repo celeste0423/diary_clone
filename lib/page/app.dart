@@ -115,7 +115,7 @@ class _AppState extends State<App> {
                       Get.to(() => NoteEditPage(),
                           transition: Transition.zoom, arguments: {'note': note, 'isTitle': true});
                     },
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
