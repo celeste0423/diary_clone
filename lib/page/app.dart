@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary_pencake_clone/page/note_edit_page.dart';
 import 'package:diary_pencake_clone/page/note_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,9 +15,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   final titleController = TextEditingController();
   final subtitleController = TextEditingController();
-
-  final noteTitleController = TextEditingController();
-  final contentController = TextEditingController();
 
   bool _isTitleFocused = false;
   final _titleFocusNode = FocusNode();
@@ -45,9 +43,12 @@ class _AppState extends State<App> {
       preferredSize: Size(Get.width, Get.height * 0.3),
       child: SafeArea(
         child: AppBar(
+          forceMaterialTransparency: true,
+          elevation: 0,
           backgroundColor: Colors.white,
           flexibleSpace: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
                   height: Get.height * 0.05,
@@ -62,7 +63,7 @@ class _AppState extends State<App> {
                       enabledBorder: InputBorder.none,
                       errorBorder: InputBorder.none,
                       disabledBorder: InputBorder.none,
-                      hintText: _isTitleFocused ? '' : '제목을 입력하세요',
+                      hintText: _isTitleFocused ? '' : '페이지 제목을 입력하세요',
                       hintStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
@@ -106,40 +107,33 @@ class _AppState extends State<App> {
         children: [
           Column(
             children: [
-              TextField(
-                controller: noteTitleController,
-                decoration: const InputDecoration(
-                  label: Text('노트제목을 입력하세요'),
-                ),
-              ),
-              TextFormField(
-                controller: contentController,
-                decoration: const InputDecoration(
-                  label: Text('노트내용을 입력하세요'),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: GestureDetector(
-                    onTap: () {
-                      final noteTitle = noteTitleController.text;
-                      final content = contentController.text;
-                      final createdAt = DateTime.now();
-                      //create기능을 담당하는 method추가
-                      createNote(
-                        noteTitle: noteTitle,
-                        content: content,
-                        createdAt: createdAt,
-                      );
+                    onTap: () async {
+                      Note note = await Note.add();
+                      Get.to(() => NoteEditPage(),
+                          transition: Transition.zoom, arguments: {'note': note, 'isTitle': true});
                     },
-                    child: const Text('저장 버튼')),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '노트 추가',
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        Icon(Icons.add),
+                      ],
+                    )),
               ),
               const SizedBox(
                 height: 10,
               ),
               const Text(
                 '옆으로 슬라이드하면 데이터 삭제',
-                style: TextStyle(color: Colors.black45),
+                style: TextStyle(color: Colors.black45, fontSize: 12),
               )
             ],
           ),
@@ -173,14 +167,25 @@ class _AppState extends State<App> {
         background: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-            colors: [Colors.red.withOpacity(0.8), Colors.white],
+            colors: [
+              Colors.red.withOpacity(0.8),
+              Colors.white,
+              Colors.red.withOpacity(0.8)
+            ],
             begin: Alignment.centerRight,
             end: Alignment.centerLeft,
           )),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Icon(
                   Icons.delete,
@@ -203,17 +208,24 @@ class _AppState extends State<App> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  note.noteTitle!,
-                  style: const TextStyle(
-                    fontSize: 15,
+                Flexible(
+                  flex: 7,
+                  child: Text(
+                    note.noteTitle!,
+                    style: const TextStyle(
+                      fontSize: 15,
+                    ),
+                    maxLines: 1,
                   ),
                 ),
-                Text(
-                  timeago.format(note.createdAt!),
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.black38,
+                Flexible(
+                  flex: 3,
+                  child: Text(
+                    timeago.format(note.createdAt!),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Colors.black38,
+                    ),
                   ),
                 ),
               ],
@@ -263,6 +275,48 @@ class _AppState extends State<App> {
           backgroundColor: Colors.white,
           appBar: _appBarWidget(),
           body: _bodyWidget(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
+                  builder: (BuildContext context) {
+                    return Positioned.fill(
+                      child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '앱 설정',
+                              style: TextStyle(
+                                decoration: TextDecoration.none,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black.withOpacity(0.6),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+              );
+            },
+            tooltip: '메뉴에요',
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 2,
+                color: Colors.black.withOpacity(0.2)
+              ),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            foregroundColor: Colors.grey,
+            elevation: 0,
+            highlightElevation: 12.0,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.more_horiz, size: 30, color: Colors.black.withOpacity(0.2),),
+          ),
         ));
   }
 }

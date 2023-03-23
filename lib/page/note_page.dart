@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diary_pencake_clone/page/note_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,71 +5,87 @@ import 'package:intl/intl.dart';
 
 import '../repository/notes_repository.dart';
 
-class NotePage extends StatelessWidget {
-  NotePage({Key? key}) : super(key: key);
+class NotePage extends StatefulWidget {
+  const NotePage({Key? key}) : super(key: key);
+
+  @override
+  State<NotePage> createState() => _NotePageState();
+}
+
+class _NotePageState extends State<NotePage> {
 
   Note note = Get.arguments;
 
   Widget _noteWidget() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('notes')
-          .orderBy("created_at", descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
-        }
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  note.noteTitle!,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  DateFormat('yyyy년 m월 dd일 (E) ah:mm')
-                      .format(note.createdAt as DateTime),
-                  style: const TextStyle(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            flex: 2,
+            child: GestureDetector(
+              onTap: () {
+                Get.to(() => NoteEditPage(),
+                    arguments: {'note': note, 'isTitle': true}, transition: Transition.fade);
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    note.noteTitle!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    DateFormat('yyyy년 m월 dd일 (E) ah:mm')
+                        .format(note.createdAt as DateTime),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 12,
-                      color: Colors.black38),
-                ),
+                      color: Colors.black38,
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: SingleChildScrollView(
-                  child: Text(
-                    note.content.toString(),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: Colors.black54),
+            ),
+          ),
+          Expanded(
+            flex: 8,
+            child: SingleChildScrollView(
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(() => NoteEditPage(),
+                      arguments: {'note': note, 'isTitle': false}, transition: Transition.fade);
+                },
+                child: Text(
+                  note.content.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 15,
+                    color: Colors.black54,
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        forceMaterialTransparency: true,
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: GestureDetector(
             onTap: () {
               Get.back();
@@ -80,21 +95,32 @@ class NotePage extends StatelessWidget {
               color: Colors.black26,
             )),
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(child: _noteWidget()),
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                Get.to(() => NoteEditPage(),
-                    arguments: note, transition: Transition.fadeIn);
+      body: _noteWidget(),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        elevation: 0,
+
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.image_outlined, size: 20, color: Colors.black.withOpacity(0.2),),
+              onPressed: () {
               },
-              child: Container(
-                color: Colors.black.withOpacity(0),
-              ),
             ),
-          )
-        ],
+            IconButton(
+              icon: Icon(Icons.share, size: 20, color: Colors.black.withOpacity(0.2),),
+              onPressed: () {
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.more_vert, size: 20, color: Colors.black.withOpacity(0.2),),
+              onPressed: () {
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

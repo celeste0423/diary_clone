@@ -44,7 +44,26 @@ class Note {
             : (json['deletedAt'] as Timestamp).toDate(),
       );
 
-  // Create a new note document
+  //Create a new note document
+  static Future<Note> add() async {
+    try {
+      final notesCollection =
+          FirebaseFirestore.instance.collection('notes').doc();
+      final note = Note(
+        id: notesCollection.id,
+        noteTitle: '',
+        content: '',
+        createdAt: DateTime.now(),
+      );
+      await notesCollection.set(note.toJson());
+      return note;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
+  }
+
+  // Add a new note document
   static Future<void> create(Note note) async {
     try {
       final CollectionReference notesCollection =

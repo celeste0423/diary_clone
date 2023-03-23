@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary_pencake_clone/page/note_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +17,8 @@ class _NoteEditPageState extends State<NoteEditPage> {
   TextEditingController? noteTitleController;
   TextEditingController? contentController;
 
-  Note note = Get.arguments;
+  Note note = Get.arguments['note'];
+  bool isTitle = Get.arguments['isTitle'];
 
   final notesCollection = FirebaseFirestore.instance.collection('notes');
   List<QueryDocumentSnapshot<Map<String, dynamic>>>? documents;
@@ -35,10 +37,15 @@ class _NoteEditPageState extends State<NoteEditPage> {
   @override
   PreferredSizeWidget _appBarWidget() {
     return AppBar(
+      forceMaterialTransparency: true,
+      elevation: 0,
       backgroundColor: Colors.white,
       leadingWidth: 100,
       leading: GestureDetector(
         onTap: () {
+          if(note.noteTitle == '' && note.content == ''){
+            Note.delete(note.id!);
+          }
           Get.back();
         },
         child: const Padding(
@@ -59,7 +66,14 @@ class _NoteEditPageState extends State<NoteEditPage> {
       actions: [
         GestureDetector(
           onTap: () {
-            Get.back();
+            Note updateNote = Note(
+              id: note.id,
+              noteTitle: noteTitleController!.text,
+              content: contentController!.text,
+              createdAt: DateTime.now(),
+            );
+            Note.update(updateNote);
+            Get.off(const NotePage(), transition: Transition.fade, arguments: updateNote);
           },
           child: const Padding(
             padding: EdgeInsets.all(10.0),
@@ -88,8 +102,9 @@ class _NoteEditPageState extends State<NoteEditPage> {
             child: Column(
               children: [
                 TextField(
+                  maxLines: null,
                   controller: noteTitleController,
-                  autofocus: true,
+                  autofocus: isTitle ? true : false,
                   onChanged: (value) {
                     notesCollection.doc(note.id).update({'note_title': value});
                   },
@@ -109,17 +124,23 @@ class _NoteEditPageState extends State<NoteEditPage> {
                 const Divider(
                   height: 1,
                 ),
-                TextFormField(
-                  controller: contentController,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    hintText: '내용을 입력하세요',
-                    hintStyle: TextStyle(
-                      fontSize: 15,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: TextField(
+                      maxLines: null,
+                      controller: contentController,
+                      autofocus: isTitle ? false : true,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: '내용을 입력하세요',
+                        hintStyle: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
                     ),
                   ),
                 ),
