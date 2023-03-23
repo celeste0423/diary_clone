@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Note {
@@ -31,7 +33,7 @@ class Note {
   static Note fromJson(Map<String, dynamic> json) => Note(
         id: json['id'] == null ? '' : json['id'] as String?,
         noteTitle:
-            json['note_title'] == null ? '' : json['note_title'] as String?,
+            json['note_title'] == null ? '' : utf8.decode(json['note_title']),
         content: json['content'] == null ? '' : json['content'] as String?,
         createdAt: json['created_at'] == null
             ? null
