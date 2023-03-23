@@ -200,7 +200,7 @@ class _AppState extends State<App> {
         },
         child: GestureDetector(
           onTap: () {
-            Get.to(() => const NotePage(),
+            Get.to(() => NotePage(),
                 arguments: note, transition: Transition.leftToRightWithFade);
           },
           child: Padding(
