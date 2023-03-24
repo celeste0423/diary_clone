@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary_pencake_clone/repository/notepage_repository.dart';
 
 class Note {
   String? id;
+  String? notePageid;
   final String? noteTitle;
   final String? content;
   final DateTime? createdAt;
@@ -10,6 +12,7 @@ class Note {
 
   Note({
     this.id,
+    this.notePageid,
     required this.noteTitle,
     required this.content,
     this.createdAt,
@@ -20,6 +23,7 @@ class Note {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'note_page_id': notePageid,
       'note_title': noteTitle,
       'content': content,
       'created_at': createdAt,
@@ -30,6 +34,8 @@ class Note {
 
   static Note fromJson(Map<String, dynamic> json) => Note(
         id: json['id'] == null ? '' : json['id'] as String?,
+        notePageid:
+            json['note_page_id'] == null ? '' : json['note_page_id'] as String,
         noteTitle:
             json['note_title'] == null ? '' : json['note_title'] as String?,
         content: json['content'] == null ? '' : json['content'] as String?,
@@ -45,12 +51,13 @@ class Note {
       );
 
   //Create a new note document
-  static Future<Note> add() async {
+  static Future<Note> add(Notepage notepage) async {
     try {
       final notesCollection =
           FirebaseFirestore.instance.collection('notes').doc();
       final note = Note(
         id: notesCollection.id,
+        notePageid: notepage.id,
         noteTitle: '',
         content: '',
         createdAt: DateTime.now(),
@@ -63,17 +70,18 @@ class Note {
     }
   }
 
-  // Add a new note document
-  static Future<void> create(Note note) async {
-    try {
-      final CollectionReference notesCollection =
-          FirebaseFirestore.instance.collection('notes');
-      await notesCollection.add(note.toJson());
-    } catch (e) {
-      print(e.toString());
-      rethrow;
-    }
-  }
+  // create 는 아래와 같이 쓰는 게 정석이긴 하지만..
+  // // Add a new note document
+  // static Future<void> create(Note note) async {
+  //   try {
+  //     final CollectionReference notesCollection =
+  //         FirebaseFirestore.instance.collection('notes');
+  //     await notesCollection.add(note.toJson());
+  //   } catch (e) {
+  //     print(e.toString());
+  //     rethrow;
+  //   }
+  // }
 
   // Read all note documents
   // static Future<List<Note>> readAll() async {

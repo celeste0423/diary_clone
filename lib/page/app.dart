@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary_pencake_clone/page/menu_page.dart';
 import 'package:diary_pencake_clone/page/note_edit_page.dart';
 import 'package:diary_pencake_clone/page/note_page.dart';
+import 'package:diary_pencake_clone/repository/notepage_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -8,15 +10,17 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../repository/notes_repository.dart';
 
 class App extends StatefulWidget {
-  const App({super.key});
+  final Notepage baseNotePage;
+
+  const App({super.key, required this.baseNotePage});
 
   @override
   State<App> createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-  final titleController = TextEditingController();
-  final subtitleController = TextEditingController();
+  TextEditingController? titleController;
+  TextEditingController? subtitleController;
 
   bool _isTitleFocused = false;
   final _titleFocusNode = FocusNode();
@@ -26,7 +30,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
     _titleFocusNode.addListener(() {
       setState(() {
         _isTitleFocused = _titleFocusNode.hasFocus;
@@ -37,6 +40,10 @@ class _AppState extends State<App> {
         _isSubtitleFocused = _subtitleFocusNode.hasFocus;
       });
     });
+    titleController =
+        TextEditingController(text: widget.baseNotePage.pageTitle);
+    subtitleController =
+        TextEditingController(text: widget.baseNotePage.pageSubtitle);
   }
 
   PreferredSizeWidget _appBarWidget() {
@@ -53,29 +60,47 @@ class _AppState extends State<App> {
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
-                TextFormField(
+                TextField(
                   controller: titleController,
                   focusNode: _titleFocusNode,
                   textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      hintText: _isTitleFocused ? '' : '페이지 제목을 입력하세요',
-                      hintStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      )),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    hintText: _isTitleFocused ? '' : '페이지 제목을 입력하세요',
+                    hintStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    Notepage updateNotepage = Notepage(
+                      id: widget.baseNotePage.id,
+                      pageTitle: titleController!.text,
+                      pageSubtitle: subtitleController!.text,
+                      pageCreatedAt: widget.baseNotePage.pageCreatedAt,
+                    );
+                    Notepage.update(updateNotepage);
+                  },
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
+                TextField(
                   controller: subtitleController,
                   focusNode: _subtitleFocusNode,
                   textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 15,
+                  ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
@@ -83,7 +108,20 @@ class _AppState extends State<App> {
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     hintText: _isSubtitleFocused ? '' : '부제목을 입력하세요',
+                    hintStyle: const TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                    ),
                   ),
+                  onChanged: (value) {
+                    Notepage updateNotepage = Notepage(
+                      id: widget.baseNotePage.id,
+                      pageTitle: titleController!.text,
+                      pageSubtitle: subtitleController!.text,
+                      pageCreatedAt: widget.baseNotePage.pageCreatedAt,
+                    );
+                    Notepage.update(updateNotepage);
+                  },
                 ),
                 const Padding(
                   padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -111,9 +149,15 @@ class _AppState extends State<App> {
                 padding: const EdgeInsets.all(20.0),
                 child: GestureDetector(
                     onTap: () async {
-                      Note note = await Note.add();
+                      print(widget.baseNotePage.id);
+                      Note note = await Note.add(widget.baseNotePage);
                       Get.to(() => NoteEditPage(),
-                          transition: Transition.zoom, arguments: {'note': note, 'isTitle': true});
+                          transition: Transition.zoom,
+                          arguments: {
+                            'note': note,
+                            'note_page': widget.baseNotePage,
+                            'isTitle': true
+                          });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -142,6 +186,7 @@ class _AppState extends State<App> {
               stream: readNotes(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
+                  print(snapshot.error.toString());
                   return const Text('에러');
                 } else if (snapshot.hasData) {
                   final notes = snapshot.data!;
@@ -200,7 +245,7 @@ class _AppState extends State<App> {
         },
         child: GestureDetector(
           onTap: () {
-            Get.to(() => const NotePage(),
+            Get.to(() => NotePage(),
                 arguments: note, transition: Transition.leftToRightWithFade);
           },
           child: Padding(
@@ -234,31 +279,11 @@ class _AppState extends State<App> {
         ),
       );
 
-  Future createNote({
-    String? noteTitle,
-    String? content,
-    DateTime? createdAt,
-  }) async {
-    //name을 입력받아서 들고옴
-    //collection의 위치 설정
-    //뒤에 .doc('{너의 아이디}')를 붙일 경우 특정 collection내의 특정 document를 지정하는 것
-    final docNote = FirebaseFirestore.instance.collection('notes').doc();
-    //.doc()안에 아무것도 없을 경우 자동으로 아이디 생성
-    final note = Note(
-      id: docNote.id,
-      noteTitle: noteTitle,
-      content: content,
-      createdAt: createdAt,
-    );
-    final json = note.toJson();
-
-    await docNote.set(json); //docUser 위치에 json 내용을 set함
-  }
-
   Stream<List<Note>> readNotes() {
     return FirebaseFirestore.instance
         .collection('notes')
         .orderBy("created_at", descending: true)
+        .where('note_page_id', isEqualTo: widget.baseNotePage.id as String)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Note.fromJson(doc.data())).toList());
@@ -277,45 +302,25 @@ class _AppState extends State<App> {
           body: _bodyWidget(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              showDialog(
-                  context: context,
-                  barrierDismissible: true, // 바깥 영역 터치시 닫을지 여부
-                  builder: (BuildContext context) {
-                    return Positioned.fill(
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '앱 설정',
-                              style: TextStyle(
-                                decoration: TextDecoration.none,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black.withOpacity(0.6),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-              );
+              Get.to(() => MenuPage(),
+                  transition: Transition.fadeIn,
+                  arguments: widget.baseNotePage);
             },
             tooltip: '메뉴에요',
             shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 2,
-                color: Colors.black.withOpacity(0.2)
-              ),
+              side:
+                  BorderSide(width: 1.2, color: Colors.black.withOpacity(0.2)),
               borderRadius: BorderRadius.circular(50),
             ),
             foregroundColor: Colors.grey,
             elevation: 0,
             highlightElevation: 12.0,
             backgroundColor: Colors.white,
-            child: Icon(Icons.more_horiz, size: 30, color: Colors.black.withOpacity(0.2),),
+            child: Icon(
+              Icons.more_horiz,
+              size: 30,
+              color: Colors.black.withOpacity(0.2),
+            ),
           ),
         ));
   }

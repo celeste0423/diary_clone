@@ -1,4 +1,4 @@
-#Thu Mar 23 12:39:54 KST 2023
+#Fri Mar 24 17:53:00 KST 2023
 base.2=C\:\\Users\\jyeob\\StudioProjects\\diary_pencake_clone\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes3.dex
 path.2=classes3.dex
 base.1=C\:\\Users\\jyeob\\StudioProjects\\diary_pencake_clone\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes2.dex

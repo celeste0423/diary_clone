@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diary_pencake_clone/page/note_page.dart';
+import 'package:diary_pencake_clone/repository/notepage_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 import '../repository/notes_repository.dart';
 
@@ -18,6 +18,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
   TextEditingController? contentController;
 
   Note note = Get.arguments['note'];
+  Notepage _notepage = Get.arguments['note_page'];
   bool isTitle = Get.arguments['isTitle'];
 
   final notesCollection = FirebaseFirestore.instance.collection('notes');
@@ -42,7 +43,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
       leadingWidth: 100,
       leading: GestureDetector(
         onTap: () {
-          if(note.noteTitle == '' && note.content == ''){
+          if (note.noteTitle == '' && note.content == '') {
             Note.delete(note.id!);
           }
           Get.back();
@@ -67,12 +68,14 @@ class _NoteEditPageState extends State<NoteEditPage> {
           onTap: () {
             Note updateNote = Note(
               id: note.id,
+              notePageid: _notepage.id,
               noteTitle: noteTitleController!.text,
               content: contentController!.text,
               createdAt: DateTime.now(),
             );
             Note.update(updateNote);
-            Get.off(const NotePage(), transition: Transition.fade, arguments: updateNote);
+            Get.off(()=> NotePage(),
+                transition: Transition.fade, arguments: updateNote);
           },
           child: const Padding(
             padding: EdgeInsets.all(10.0),
