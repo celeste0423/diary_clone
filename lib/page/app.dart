@@ -203,6 +203,13 @@ class _AppState extends State<App> {
                 }
               },
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Text(
+              '다양한 페이지와 기능은 오른쪽 버튼을 눌러보세요',
+              style: TextStyle(color: Colors.black45, fontSize: 12),
+            ),
           )
         ],
       ),
