@@ -43,6 +43,7 @@ class _MenuPageManagementState extends State<MenuPageManagement> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: GestureDetector(
