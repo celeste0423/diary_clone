@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../repository/notepage_repository.dart';
 import '../repository/notes_repository.dart';
 
 class NotePage extends StatefulWidget {
@@ -14,7 +15,8 @@ class NotePage extends StatefulWidget {
 
 class _NotePageState extends State<NotePage> {
 
-  Note note = Get.arguments;
+  Note note = Get.arguments['note'];
+  final Notepage _notepage = Get.arguments['note_page'];
 
   Widget _noteWidget() {
     return Padding(
@@ -27,7 +29,7 @@ class _NotePageState extends State<NotePage> {
             child: GestureDetector(
               onTap: () {
                 Get.to(() => NoteEditPage(),
-                    arguments: {'note': note, 'isTitle': true}, transition: Transition.fade);
+                    arguments: {'note': note, 'isTitle': true, 'note_page': _notepage}, transition: Transition.fade);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

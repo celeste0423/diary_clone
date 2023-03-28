@@ -18,7 +18,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
   TextEditingController? contentController;
 
   Note note = Get.arguments['note'];
-  Notepage _notepage = Get.arguments['note_page'];
+  final Notepage _notepage = Get.arguments['note_page'];
   bool isTitle = Get.arguments['isTitle'];
 
   final notesCollection = FirebaseFirestore.instance.collection('notes');
@@ -74,8 +74,9 @@ class _NoteEditPageState extends State<NoteEditPage> {
               createdAt: DateTime.now(),
             );
             Note.update(updateNote);
-            Get.off(()=> NotePage(),
-                transition: Transition.fade, arguments: updateNote);
+            Get.off(() => NotePage(),
+                transition: Transition.fade,
+                arguments: {'note': updateNote, 'note_page': _notepage});
           },
           child: const Padding(
             padding: EdgeInsets.all(10.0),

@@ -153,7 +153,6 @@ class _AppState extends State<App> {
                 padding: const EdgeInsets.all(20.0),
                 child: GestureDetector(
                     onTap: () async {
-                      print(widget.baseNotePage.id);
                       Note note = await Note.add(widget.baseNotePage);
                       Get.to(() => NoteEditPage(),
                           transition: Transition.zoom,
@@ -250,7 +249,8 @@ class _AppState extends State<App> {
         child: GestureDetector(
           onTap: () {
             Get.to(() => NotePage(),
-                arguments: note, transition: Transition.leftToRightWithFade);
+                arguments: {'note': note, 'note_page': widget.baseNotePage},
+                transition: Transition.leftToRightWithFade);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
