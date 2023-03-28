@@ -110,6 +110,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "fluttertoast",
+      "rootUri": "file:///C:/Users/jyeob/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "get",
       "rootUri": "file:///C:/Users/jyeob/AppData/Local/Pub/Cache/hosted/pub.dev/get-4.6.5",
       "packageUri": "lib/",
@@ -162,6 +168,12 @@
       "rootUri": "file:///C:/Users/jyeob/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "search_page",
+      "rootUri": "file:///C:/Users/jyeob/AppData/Local/Pub/Cache/hosted/pub.dev/search_page-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "sky_engine",
@@ -224,7 +236,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-03-22T04:11:07.385318Z",
+  "generated": "2023-03-28T00:52:28.139850Z",
   "generator": "pub",
   "generatorVersion": "3.0.0-348.0.dev"
 }

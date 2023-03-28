@@ -86,13 +86,14 @@ class _NotePageState extends State<NotePage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: GestureDetector(
-            onTap: () {
-              Get.back();
-            },
-            child: const Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: Colors.black26,
-            )),
+          onTap: () {
+            Get.back();
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new_outlined,
+            color: Colors.black26,
+          ),
+        ),
       ),
       body: _noteWidget(),
       bottomNavigationBar: BottomAppBar(

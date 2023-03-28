@@ -28,11 +28,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final String fontName = '';
     return GetMaterialApp(
       title: 'Diary_clone',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+        // fontFamily: fontName,
       ),
       home: App(baseNotePage: baseNotePage),
     );

@@ -43,6 +43,7 @@ class _MenuPageManagementState extends State<MenuPageManagement> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: GestureDetector(
           onTap: () async {
@@ -98,33 +99,21 @@ class _MenuPageManagementState extends State<MenuPageManagement> {
                           onLongPress: () {
                             showAlertDialog(BuildContext context) {
                               showDialog(
+                                useRootNavigator: false,
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text(
-                                      '경고',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    content: Text('정말로 삭제하시겠습니까?'),
+                                    title: const Text('경고', style: TextStyle(fontSize: 15),),
+                                    content: const Text('정말로 삭제하시겠습니까?'),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: Text(
-                                          '아니요',
-                                          style: TextStyle(
-                                              color: Colors.black
-                                                  .withOpacity(0.3)),
-                                        ),
+                                        child: Text('아니요', style: TextStyle(color: Colors.black.withOpacity(0.3)),),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                       ),
                                       TextButton(
-                                        child: Text(
-                                          '예',
-                                          style: TextStyle(
-                                              color:
-                                                  Colors.blue.withOpacity(0.3)),
-                                        ),
+                                        child: Text('예', style: TextStyle(color: Colors.blue.withOpacity(0.3)),),
                                         onPressed: () {
                                           Notepage.delete(notepages[index].id!);
                                           Navigator.of(context).pop();
@@ -137,14 +126,15 @@ class _MenuPageManagementState extends State<MenuPageManagement> {
                             }
                             showModal(BuildContext context) {
                               showModalBottomSheet(
+                                useRootNavigator: false,
                                 context: context,
                                 builder: (BuildContext context) {
                                   return Container(
-                                    padding: EdgeInsets.all(16.0),
+                                    padding: const EdgeInsets.all(16.0),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        Text('경고',
+                                        const Text('경고',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15,
@@ -159,15 +149,13 @@ class _MenuPageManagementState extends State<MenuPageManagement> {
                                             TextButton(
                                               child: Text('아니요'),
                                               onPressed: () {
-                                                Get.off(
-                                                    () => MenuPageManagement());
+                                                Navigator.of(context).pop();
                                               },
                                             ),
                                             TextButton(
                                               child: Text('예'),
                                               onPressed: () {
-                                                Notepage.delete(
-                                                    notepages[index].id!);
+                                                Notepage.delete(notepages[index].id!);
                                                 Navigator.of(context).pop();
                                               },
                                             ),

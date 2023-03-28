@@ -15,3 +15,4 @@ com.example.diary_pencake_clone.app-mergeDebugResources-13 C:\Users\jyeob\Studio
 com.example.diary_pencake_clone.app-merged_res-14 C:\Users\jyeob\StudioProjects\diary_pencake_clone\build\app\intermediates\merged_res\debug
 com.example.diary_pencake_clone.app-packaged_res-15 C:\Users\jyeob\StudioProjects\diary_pencake_clone\build\cloud_firestore\intermediates\packaged_res\debug
 com.example.diary_pencake_clone.app-packaged_res-16 C:\Users\jyeob\StudioProjects\diary_pencake_clone\build\firebase_core\intermediates\packaged_res\debug
+com.example.diary_pencake_clone.app-packaged_res-17 C:\Users\jyeob\StudioProjects\diary_pencake_clone\build\fluttertoast\intermediates\packaged_res\debug
