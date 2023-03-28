@@ -7,17 +7,15 @@ import '../repository/notepage_repository.dart';
 import '../repository/notes_repository.dart';
 
 class NotePage extends StatefulWidget {
-  const NotePage({Key? key}) : super(key: key);
+  final Notepage notepage;
+  final Note note;
+  const NotePage({Key? key, required this.notepage, required this.note});
 
   @override
   State<NotePage> createState() => _NotePageState();
 }
 
 class _NotePageState extends State<NotePage> {
-
-  Note note = Get.arguments['note'];
-  final Notepage _notepage = Get.arguments['note_page'];
-
   Widget _noteWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -28,15 +26,19 @@ class _NotePageState extends State<NotePage> {
             flex: 2,
             child: GestureDetector(
               onTap: () {
-                Get.to(() => NoteEditPage(),
-                    arguments: {'note': note, 'isTitle': true, 'note_page': _notepage}, transition: Transition.fade);
+                Get.to(() => NoteEditPage(
+                  note: widget.note,
+                  notepage: widget.notepage,
+                  isTitle: true
+                ),
+                  transition: Transition.fade);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    note.noteTitle!,
+                    widget.note.noteTitle!,
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
@@ -44,7 +46,7 @@ class _NotePageState extends State<NotePage> {
                   ),
                   Text(
                     DateFormat('yyyy년 m월 dd일 (E) ah:mm')
-                        .format(note.createdAt as DateTime),
+                        .format(widget.note.createdAt as DateTime),
                     style: const TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 12,
@@ -60,11 +62,15 @@ class _NotePageState extends State<NotePage> {
             child: SingleChildScrollView(
               child: GestureDetector(
                 onTap: () {
-                  Get.to(() => NoteEditPage(),
-                      arguments: {'note': note, 'isTitle': false}, transition: Transition.fade);
+                  Get.to(() => NoteEditPage(
+                    note: widget.note,
+                    notepage: widget.notepage,
+                    isTitle: false,
+                  ),
+                  transition: Transition.fade);
                 },
                 child: Text(
-                  note.content.toString(),
+                  widget.note.content.toString(),
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 15,
@@ -78,7 +84,6 @@ class _NotePageState extends State<NotePage> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,25 +106,33 @@ class _NotePageState extends State<NotePage> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         elevation: 0,
-
         shape: const CircularNotchedRectangle(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.image_outlined, size: 20, color: Colors.black.withOpacity(0.2),),
-              onPressed: () {
-              },
+              icon: Icon(
+                Icons.image_outlined,
+                size: 20,
+                color: Colors.black.withOpacity(0.2),
+              ),
+              onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.share, size: 20, color: Colors.black.withOpacity(0.2),),
-              onPressed: () {
-              },
+              icon: Icon(
+                Icons.share,
+                size: 20,
+                color: Colors.black.withOpacity(0.2),
+              ),
+              onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.more_vert, size: 20, color: Colors.black.withOpacity(0.2),),
-              onPressed: () {
-              },
+              icon: Icon(
+                Icons.more_vert,
+                size: 20,
+                color: Colors.black.withOpacity(0.2),
+              ),
+              onPressed: () {},
             ),
           ],
         ),

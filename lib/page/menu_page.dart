@@ -183,9 +183,12 @@ class MenuPage extends StatelessWidget {
             GestureDetector(
               onTap: () async {
                 Note note = await Note.add(_notepage);
-                Get.to(() => NoteEditPage(),
-                    transition: Transition.zoom,
-                    arguments: {'note': note, 'isTitle': true});
+                Get.to(() => NoteEditPage(
+                  note: note,
+                  notepage: _notepage,
+                  isTitle: true,
+                ),
+                    transition: Transition.zoom);
               },
               child: Text(
                 '노트 추가',

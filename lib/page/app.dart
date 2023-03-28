@@ -154,13 +154,12 @@ class _AppState extends State<App> {
                 child: GestureDetector(
                     onTap: () async {
                       Note note = await Note.add(widget.baseNotePage);
-                      Get.to(() => NoteEditPage(),
-                          transition: Transition.zoom,
-                          arguments: {
-                            'note': note,
-                            'note_page': widget.baseNotePage,
-                            'isTitle': true
-                          });
+                      Get.to(() => NoteEditPage(
+                        note: note,
+                        notepage: widget.baseNotePage,
+                        isTitle: true,
+                      ),
+                          transition: Transition.zoom);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -248,8 +247,7 @@ class _AppState extends State<App> {
         },
         child: GestureDetector(
           onTap: () {
-            Get.to(() => NotePage(),
-                arguments: {'note': note, 'note_page': widget.baseNotePage},
+            Get.to(() => NotePage(note: note, notepage: widget.baseNotePage,),
                 transition: Transition.leftToRightWithFade);
           },
           child: Padding(

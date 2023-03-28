@@ -8,6 +8,11 @@ import '../repository/notes_repository.dart';
 
 class NoteEditPage extends StatefulWidget {
   String? defaultValue;
+  final Note note;
+  final Notepage notepage;
+  final bool isTitle;
+  NoteEditPage({Key? key, required this.note, required this.notepage,
+      required this.isTitle});
 
   @override
   State<NoteEditPage> createState() => _NoteEditPageState();
@@ -17,10 +22,6 @@ class _NoteEditPageState extends State<NoteEditPage> {
   TextEditingController? noteTitleController;
   TextEditingController? contentController;
 
-  Note note = Get.arguments['note'];
-  final Notepage _notepage = Get.arguments['note_page'];
-  bool isTitle = Get.arguments['isTitle'];
-
   final notesCollection = FirebaseFirestore.instance.collection('notes');
   List<QueryDocumentSnapshot<Map<String, dynamic>>>? documents;
   bool isLoading = true;
@@ -28,8 +29,8 @@ class _NoteEditPageState extends State<NoteEditPage> {
   @override
   void initState() {
     super.initState();
-    noteTitleController = TextEditingController(text: note.noteTitle);
-    contentController = TextEditingController(text: note.content);
+    noteTitleController = TextEditingController(text: widget.note.noteTitle);
+    contentController = TextEditingController(text: widget.note.content);
     setState(() {
       isLoading = false;
     });
@@ -43,8 +44,8 @@ class _NoteEditPageState extends State<NoteEditPage> {
       leadingWidth: 100,
       leading: GestureDetector(
         onTap: () {
-          if (note.noteTitle == '' && note.content == '') {
-            Note.delete(note.id!);
+          if (widget.note.noteTitle == '' && widget.note.content == '') {
+            Note.delete(widget.note.id!);
           }
           Get.back();
         },
@@ -67,16 +68,15 @@ class _NoteEditPageState extends State<NoteEditPage> {
         GestureDetector(
           onTap: () {
             Note updateNote = Note(
-              id: note.id,
-              notePageid: _notepage.id,
+              id: widget.note.id,
+              notePageid: widget.notepage.id,
               noteTitle: noteTitleController!.text,
               content: contentController!.text,
               createdAt: DateTime.now(),
             );
             Note.update(updateNote);
-            Get.off(() => NotePage(),
-                transition: Transition.fade,
-                arguments: {'note': updateNote, 'note_page': _notepage});
+            Get.off(() => NotePage(note: updateNote, notepage: widget.notepage,),
+              transition: Transition.fade,);
           },
           child: const Padding(
             padding: EdgeInsets.all(10.0),
@@ -101,55 +101,55 @@ class _NoteEditPageState extends State<NoteEditPage> {
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                TextField(
-                  maxLines: null,
-                  controller: noteTitleController,
-                  autofocus: isTitle ? true : false,
-                  onChanged: (value) {
-                    notesCollection.doc(note.id).update({'note_title': value});
-                  },
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    hintText: '제목을 입력하세요',
-                    hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                const Divider(
-                  height: 1,
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: TextField(
-                      maxLines: null,
-                      controller: contentController,
-                      autofocus: isTitle ? false : true,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        hintText: '내용을 입력하세요',
-                        hintStyle: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          TextField(
+            maxLines: null,
+            controller: noteTitleController,
+            autofocus: widget.isTitle ? true : false,
+            onChanged: (value) {
+              notesCollection.doc(widget.note.id).update({'note_title': value});
+            },
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              hintText: '제목을 입력하세요',
+              hintStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-          );
+          ),
+          const Divider(
+            height: 1,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: TextField(
+                maxLines: null,
+                controller: contentController,
+                autofocus: widget.isTitle ? false : true,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintText: '내용을 입력하세요',
+                  hintStyle: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
