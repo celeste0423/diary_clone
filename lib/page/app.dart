@@ -57,6 +57,10 @@ class _AppState extends State<App> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                const Text(
+                  '제목과 부제목을 클릭하여 수정 가능',
+                  style: TextStyle(color: Colors.black45, fontSize: 12),
+                ),
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
